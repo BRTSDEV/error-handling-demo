@@ -1,13 +1,3 @@
-"""Error handling demo by BRTSDEV.
-
-A small config loader that shows the most useful error handling patterns in
-Python: custom exceptions, specific except blocks, try/except/else/finally,
-exception chaining (raise ... from), logging, and a reusable retry decorator.
-
-Run it:   python error_handling_demo.py
-Test it:  pytest
-"""
-
 import json
 import logging
 import time
@@ -16,12 +6,6 @@ from pathlib import Path
 
 logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
 log = logging.getLogger(__name__)
-
-
-# --- 1. Custom exceptions ---------------------------------------------------
-# One base class lets callers catch "any config problem" with a single except,
-# while the subclasses let them react to specific problems.
-
 
 class ConfigError(Exception):
     """Base class for all config-related errors."""
@@ -33,9 +17,6 @@ class ConfigNotFoundError(ConfigError):
 
 class ConfigInvalidError(ConfigError):
     """The config file exists but its content is wrong."""
-
-
-# --- 2. Specific except blocks + else/finally + chaining ---------------------
 
 
 def load_config(path):
@@ -67,10 +48,6 @@ def load_config(path):
         raise ConfigInvalidError(f"Config must be a JSON object, got {type(data).__name__}")
     return data
 
-
-# --- 3. Validate input instead of trusting it --------------------------------
-
-
 def parse_port(value):
     """Turn a value into a valid TCP port number (1-65535)."""
     try:
@@ -80,10 +57,6 @@ def parse_port(value):
     if not 1 <= port <= 65535:
         raise ConfigInvalidError(f"Port must be between 1 and 65535, got {port}")
     return port
-
-
-# --- 4. A reusable retry decorator -------------------------------------------
-
 
 def retry(times=3, delay=0.2, exceptions=(ConnectionError,)):
     """Retry a function when it raises one of `exceptions`."""
@@ -116,10 +89,6 @@ def flaky_service():
     if _calls["count"] < 3:
         raise ConnectionError("server not reachable")
     return "connected"
-
-
-# --- Demo ---------------------------------------------------------------------
-
 
 def main():
     # Make a small valid config file to play with.
